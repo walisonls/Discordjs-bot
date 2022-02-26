@@ -9,15 +9,20 @@ const client = new Client({
   ] 
 });
 
+/*start log
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-});
+});*/
 
-client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return;
-
-  if (interaction.commandName === 'ping') {
-    await interaction.reply('Pong!');
+//set the prefix
+const prefix = ".";
+client.on("messageCreate", message => {
+  if (!message.content.startsWith(prefix) || message.author.bot) return;
+    //ping
+    if (message.content.startsWith(`${prefix}ping`)) {
+    message.channel.send(`Bot Connected!
+**Tag**: ${client.user.tag}
+**ID**: ${client.user.id}`);
   }
 });
 
