@@ -1,29 +1,25 @@
 const { Client, Intents } = require('discord.js');
 const dotenv = require('dotenv');
+const fs = require('fs')
+const path = require('path');
+
 dotenv.config();
 
-const client = new Client({ 
+const bot = new Client({ 
   intents: [
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MESSAGES,
   ] 
 });
 
-/*start log
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
-});*/
+const commandsFiles = fs.readdirSync(path.join(__dirname, "/commands")).filter(filename => filename.endWith(".js"))
 
-//set the prefix
-const prefix = ".";
-client.on("messageCreate", message => {
-  if (!message.content.startsWith(prefix) || message.author.bot) return;
-    //ping
-    if (message.content.startsWith(`${prefix}ping`)) {
-    message.channel.send(`Bot Connected!
-**Tag**: ${client.user.tag}
-**ID**: ${client.user.id}`);
-  }
+bot.commands = new Discord.Collection();
+
+//start log
+bot.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.login(process.env.TOKEN);
+//coletando TOKEN
+bot.login(process.env.TOKEN);
