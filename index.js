@@ -1,25 +1,31 @@
-const { Client, Intents } = require('discord.js');
+const Discord = require('discord.js');
 const dotenv = require('dotenv');
-const fs = require('fs')
-const path = require('path');
 
 dotenv.config();
+const prefix = ".";
 
-const bot = new Client({ 
-  intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-  ] 
+const bot = new Discord.Client({ 
+  intents: [ 'DIRECT_MESSAGES', 'GUILD_MESSAGES' ]
 });
 
-const commandsFiles = fs.readdirSync(path.join(__dirname, "/commands")).filter(filename => filename.endWith(".js"))
-
-bot.commands = new Discord.Collection();
 
 //start log
 bot.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`Logged in as ${bot.user.tag}!`);
 });
+
+bot.on("message", (msg)=>{
+  if(!msg.content.startsWith(prefix) || msg.author.bot) return;
+});
+
+bot.on('interactionCreate', async interaction => {
+  if (!interaction.isCommand()) return;
+
+  if (interaction.commandName === 'ping') {
+    await interaction.reply('Pong!');
+  }
+});
+
 
 //coletando TOKEN
 bot.login(process.env.TOKEN);
